@@ -6,19 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The requested URL /svn/trunk/normalize.css was not found on this server ->
   <!--<link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />-->
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
   <title>Restaurant Info</title>
 </head>
 
 <body class="inside">
   <header>
-    <nav>
+    <nav id="header-nav" role="navigation">
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
-    <ul id="breadcrumb" >
-      <li><a href="/">Home</a></li>
-    </ul>
+    <nav id="breadcrumb-nav" role="navigation">
+      <ul id="breadcrumb" >
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
   </header>
 
   <main id="maincontent">
