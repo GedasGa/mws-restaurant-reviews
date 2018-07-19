@@ -13,7 +13,7 @@
 
 <body>
   <header>
-    <nav>
+    <nav id="header-nav" role="navigation">
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
   </header>
@@ -25,14 +25,18 @@
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
+        <label for="neighborhoods-select" class="accessibilty-label">Select a Neighborhood</label>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
+        <label for="cuisines-select" class="accessibilty-label">Select a Cuisine</label>
         <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
       </div>
-      <ul id="restaurants-list"></ul>
+      <div class="container">
+        <ul id="restaurants-list"></ul>
+      </div>
     </section>
   </main>
 
