@@ -40,7 +40,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        const restaurant = restaurants.find(r => r.id === id);
+        const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) { // Got the restaurant
           callback(null, restaurant);
         } else { // Restaurant does not exist in the database
@@ -60,7 +60,7 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given cuisine type
-        const results = restaurants.filter(r => r.cuisine_type === cuisine);
+        const results = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, results);
       }
     });
@@ -76,7 +76,7 @@ class DBHelper {
         callback(error, null);
       } else {
         // Filter restaurants to have only given neighborhood
-        const results = restaurants.filter(r => r.neighborhood === neighborhood);
+        const results = restaurants.filter(r => r.neighborhood == neighborhood);
         callback(null, results);
       }
     });
@@ -93,10 +93,10 @@ class DBHelper {
       } else {
         let results = restaurants;
         if (cuisine !== 'all') { // filter by cuisine
-          results = results.filter(r => r.cuisine_type === cuisine);
+          results = results.filter(r => r.cuisine_type == cuisine);
         }
         if (neighborhood !== 'all') { // filter by neighborhood
-          results = results.filter(r => r.neighborhood === neighborhood);
+          results = results.filter(r => r.neighborhood == neighborhood);
         }
         callback(null, results);
       }
@@ -162,7 +162,7 @@ class DBHelper {
       {title: restaurant.name,
       alt: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant)
-      })
+      });
       marker.addTo(newMap);
     return marker;
   } 
