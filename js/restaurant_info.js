@@ -219,11 +219,11 @@ function slideDown()
 {
     var slidingDiv = document.getElementById("restaurant-address-card");
     var slidingDivStyle = window.getComputedStyle(slidingDiv);
-    var stopPosition = 300;
+    const stopPosition = 360;
 
     if (parseFloat(slidingDivStyle.marginTop) < stopPosition)
     {
-        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) + 5 + "px";
+        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) + 10 + "px";
         console.log('slide it down');
     }
 }
@@ -232,11 +232,11 @@ function slideUp()
 {
     var slidingDiv = document.getElementById("restaurant-address-card");
     var slidingDivStyle = window.getComputedStyle(slidingDiv);
-    var stopPosition = -300;
+    const stopPosition = -360;
 
     if (parseFloat(slidingDivStyle.marginTop) > stopPosition)
     {
-        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) - 5 + "px";
+        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) - 10 + "px";
         console.log('slide it up');
     }
 }
