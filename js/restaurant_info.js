@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
   // element should be replaced with the actual target element on which you have applied scroll, use window in case of no target element
   if (window.innerWidth  > 992) {
-    var lastScrollTop = 0;
+    let lastScrollTop = 0;
     window.addEventListener("scroll", function(){
-      var st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
+      let st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
       if (st > lastScrollTop) {
           slideDown();
       } else {
@@ -69,12 +69,12 @@ initMap = () => {
  */
 fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    callback(null, self.restaurant);
     return;
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    error = 'No restaurant id in URL';
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -101,6 +101,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = restaurant.photograph_alt;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;

@@ -76,7 +76,7 @@ main {
 footer {
   background-color: #444;
   color: #aaa;
-  font-size: 8pt;
+  font-size: 0.8em;
   letter-spacing: 1px;
   padding: 25px 0;
   text-align: center;
@@ -604,7 +604,7 @@ nav h1 a {
     align-items: stretch;
     justify-content: center;
   }
-  
+
   #reviews-list li {
     width: calc((100% / 3) - 7%);
     margin: 2% 1%;
