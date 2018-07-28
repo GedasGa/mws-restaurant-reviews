@@ -6,6 +6,19 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {  
   initMap();
+  // element should be replaced with the actual target element on which you have applied scroll, use window in case of no target element
+  if (window.innerWidth  > 992) {
+    var lastScrollTop = 0;
+    window.addEventListener("scroll", function(){
+      var st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
+      if (st > lastScrollTop) {
+          slideDown();
+      } else {
+          slideUp();
+      }
+      lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    }, false);
+  }
 });
 
 /**
@@ -118,52 +131,62 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
     hours.appendChild(row);
   }
-}
+};
 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+window.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+    const container = document.getElementById('reviews-container');
+    const title = document.createElement('h3');
+    title.innerHTML = 'Reviews';
+    container.appendChild(title);
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
+    if (!reviews) {
+        const noReviews = document.createElement('p');
+        noReviews.innerHTML = 'No reviews yet!';
+        container.appendChild(noReviews);
+        return;
+    }
+    const ul = document.getElementById('reviews-list');
+    reviews.forEach(review => {
+        ul.appendChild(createReviewHTML(review));
+    });
+    container.appendChild(ul);
 };
 
 /**
  * Create review HTML and add it to the webpage.
  */
-createReviewHTML = (review) => {
-  const li = document.createElement('li');
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
-  li.appendChild(name);
+window.createReviewHTML = (review) => {
+    const li = document.createElement('li');
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'review-card-header';
+    const cardBody = document.createElement('div');
+    cardBody.className = 'review-card-body';
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+    const name = document.createElement('p');
+    name.innerHTML = review.name;
+    cardHeader.appendChild(name);
 
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  li.appendChild(comments);
+    const date = document.createElement('time');
+    date.innerHTML = review.date;
+    cardHeader.appendChild(date);
 
-  return li;
+    li.appendChild(cardHeader);
+
+    const rating = document.createElement('p');
+    rating.innerHTML = `Rating: ${review.rating}`;
+    cardBody.appendChild(rating);
+
+    const comments = document.createElement('article');
+    comments.innerHTML = review.comments;
+    cardBody.appendChild(comments);
+
+    li.appendChild(cardBody);
+
+    return li;
 };
 
 /**
@@ -191,3 +214,29 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+function slideDown()
+{
+    var slidingDiv = document.getElementById("restaurant-address-card");
+    var slidingDivStyle = window.getComputedStyle(slidingDiv);
+    var stopPosition = 300;
+
+    if (parseFloat(slidingDivStyle.marginTop) < stopPosition)
+    {
+        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) + 5 + "px";
+        console.log('slide it down');
+    }
+}
+
+function slideUp()
+{
+    var slidingDiv = document.getElementById("restaurant-address-card");
+    var slidingDivStyle = window.getComputedStyle(slidingDiv);
+    var stopPosition = -300;
+
+    if (parseFloat(slidingDivStyle.marginTop) > stopPosition)
+    {
+        slidingDiv.style.marginTop = parseFloat(slidingDivStyle.marginTop) - 5 + "px";
+        console.log('slide it up');
+    }
+}
