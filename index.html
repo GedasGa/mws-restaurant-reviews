@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The requested URL /svn/trunk/normalize.css was not found on this server -->
-    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <!--<link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />-->
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
     <title>Restaurant Reviews</title>
@@ -20,7 +20,9 @@
 
     <main id="maincontent" tabindex="-1">
       <section id="map-container" tabindex="-1">
-        <div id="map"></div>
+        <div id="map" role="application" aria-label="maps application with restaurants addresses markers on the map">
+        </div>
+
       </section>
       <section>
         <div class="filter-options">
@@ -48,6 +50,8 @@
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
     <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
     <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+    <script type="text/javascript" src="js/register-sw.js"></script>
+    <script type="text/javascript" src="js/sw.js"></script>
     <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script> -->
   </body>
 
