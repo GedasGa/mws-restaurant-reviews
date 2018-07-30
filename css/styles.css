@@ -219,10 +219,10 @@ nav h1 a {
   box-shadow:	7px 10px 5px rgba(0, 0, 0, 0.6);
 }
 
-#restaurants-list li h1 {
+#restaurants-list li h2 {
   color: #f18200;
   font-family: Arial, sans-serif;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: 200;
   text-align: center;
   text-transform: uppercase;
@@ -291,7 +291,6 @@ nav h1 a {
 .inside #map-container {
   background: #333 none repeat scroll 0 0;
   height: 40vh;
-  /*width: 100%;*/
   z-index: 1
 }
 
@@ -303,8 +302,6 @@ nav h1 a {
 
 .inside #footer {
   bottom: 0;
-  /*position: absolute;*/
-  /*width: 50%;*/
 }
 
 #restaurant-name {
