@@ -14,6 +14,7 @@ self.addEventListener('install', event => {
             return cache.addAll([
                 '/',
                 '/index.html',
+                '/manifest.json',
                 '/restaurant.html',
                 '/css/styles.css',
                 '/js/dbhelper.js',
@@ -43,6 +44,19 @@ self.addEventListener('install', event => {
  * Credits: https://developers.google.com/web/fundamentals/primers/service-workers
  */
 self.addEventListener('fetch', event => {
+    if (event.request.url.includes('restaurant.html?id=')) {
+        const strippedurl = event.request.url.split('?')[0];
+        console.log('== event ==', event);
+        event.respondWith(
+            caches.match(strippedurl)
+                .then(function (response) {
+                    return response || fetch(event.response);
+                })
+        );
+        console.log('== caches ==', caches);
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request)
             .then(response => {
