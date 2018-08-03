@@ -1,17 +1,50 @@
+/**
+ * TODO
+ *
+ * 1. Fork and clone the server repository. You’ll use this development server to develop your project code. --done
+ * 2. Change the data source for your restaurant requests to pull JSON from the server, parse the response and use the response to generate the site UI.
+ * 3. Cache the JSON responses for offline use by using the IndexedDB API.
+ * 4. Follow the recommendations provided by Lighthouse to achieve the required performance targets.
+ * 5. Submit your project code for review.
+ *
+ * Get Restaurants:
+ * curl "http://localhost:1337/restaurants"
+ * Get Restaurants by id:
+ * curl "http://localhost:1337/restaurants/{3}"
+ *
+ */
+
 let restaurants,
     neighborhoods,
     cuisines;
 var newMap;
 var markers = [];
+const dbVersion = 1;
+const dbName = `restaurants`;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  initMap(); // added 
+  initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
+  createRestaurantsDB();
+  updateRestaurants();
 });
+
+/**
+ * Create Restaurants IndexedDB
+ */
+createRestaurantsDB = () => {
+  DBHelper.fetchRestaurants((error, restaurants) => {
+    if (error) { // Got an error
+      console.error(error);
+    } else {
+      DBHelper.createIndexedDB(restaurants, dbName, dbVersion);
+    }
+  });
+};
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -122,7 +155,7 @@ updateRestaurants = () => {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
     }
-  })
+  });
 };
 
 /**

@@ -15,7 +15,6 @@ self.addEventListener('install', event => {
                 '/',
                 '/index.html',
                 '/restaurant.html',
-                '/data/restaurants.json',
                 '/css/styles.css',
                 '/js/dbhelper.js',
                 '/js/main.js',
@@ -76,7 +75,7 @@ self.addEventListener('fetch', event => {
                             .then(cache => {
                                 cache.put(event.request, responseToCache);
                             })
-                            .catch(err => console.log('uh-oh', err));
+                            .catch(err => console.log('Could not save data to the cache', err));
                         return response;
                     });
             })

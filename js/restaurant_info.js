@@ -1,11 +1,14 @@
 let restaurant;
 var newMap;
+const dbVersion = 1;
+const dbName = `restaurants`;
 
 /**
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {  
   initMap();
+  createRestaurantsDB();
   // element should be replaced with the actual target element on which you have applied scroll, use window in case of no target element
   if (window.innerWidth  > 992) {
     let lastScrollTop = 0;
@@ -23,6 +26,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   }
 });
+
+/**
+ * Create Restaurants IndexedDB
+ */
+createRestaurantsDB = () => {
+  DBHelper.fetchRestaurants((error, restaurants) => {
+    if (error) { // Got an error
+      console.error(error);
+    } else {
+      DBHelper.createIndexedDB(restaurants, dbName, dbVersion);
+    }
+  });
+};
 
 /**
  * Initialize leaflet map

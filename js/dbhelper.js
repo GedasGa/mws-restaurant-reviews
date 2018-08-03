@@ -1,34 +1,104 @@
+'use strict';
+
 /**
  * Common database helper functions.
  */
 class DBHelper {
 
-  /**
+   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000; // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
+
+  static createIndexedDB(objects, name, version) {
+    return this.openDBRequest(objects, name, version);
+  };
+
+  static openDBRequest(entity, dbName, dbVersion) {
+    if (!('indexedDB' in window)) {
+      console.log('This browser doesn\'t support IndexedDB');
+      return;
+    }
+
+    let db, objectStore;
+    const idb =  window.indexedDB;
+    const dbOpenRequest = idb.open(dbName, dbVersion);
+
+    dbOpenRequest.onerror = (error) => {
+      console.error('Error while opening IndexedDB => ', error.target);
+    };
+    dbOpenRequest.onsuccess = (event) => {
+      db = event.target.result;
+      if(db.transaction){
+        const transaction = db.transaction(dbName, 'readwrite');
+        transaction.oncomplete = event => {
+          console.log('Transaction event complete =>', event);
+        };
+        objectStore = transaction.objectStore(dbName);
+        this.addToIndexedDB(objectStore, entity);
+      }
+    };
+    dbOpenRequest.onupgradeneeded = (event) => {
+      db = event.target.result;
+      objectStore = db.createObjectStore(dbName, { keyPath: 'id' });
+      if(dbName === 'restaurants'){
+        objectStore.createIndex('name', 'name', { unique: false });
+      }
+      objectStore.transaction.oncomplete = (event) => {
+        console.log('Transaction event complete =>', event);
+        objectStore = db.transaction([ dbName ], 'readwrite').objectStore(dbName);
+        this.addToIndexedDB(objectStore, entity);
+      };
+    };
+  };
+
+  static openDBGetRequest(dbName, dbVersion, callback){
+    const idb =  window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    let objectStore, objectStoreRequest, db, data;
+    const request = idb.open(dbName, dbVersion);
+    request.onsuccess = event => {
+      db = request.result;
+      const transaction = db.transaction(dbName, 'readonly');
+      transaction.oncomplete = event => {
+        console.log('Transaction event complete =>', event);
+      };
+      objectStore = transaction.objectStore(dbName);
+      objectStoreRequest = objectStore.getAll();
+      objectStoreRequest.onsuccess = event => {
+        data = event.target.result;
+        if(!data){
+          console.error('Error while fetching data => ', error);
+            callback(error, null);
+            return;
+        }
+        callback(null, data);
+      }
+    }
+  }
+
+  static addToIndexedDB(store, objects){
+    objects.forEach((object) => {
+      store.add(object);
+    });
+  };
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+    fetch(DBHelper.DATABASE_URL).then((response) => {
+      return response.json()
+    }).then(restaurants => {
+      DBHelper.createIndexedDB(restaurants, dbName, dbVersion);
+      callback(null, restaurants);
+    }).catch(error => { // Got an error from server.
+      console.error('Error fetching restaurants data => ', error);
+      this.openDBGetRequest(dbName, dbVersion, callback);
+    })
   }
 
   /**
@@ -150,7 +220,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
 
   /**
@@ -176,6 +246,5 @@ class DBHelper {
     );
     return marker;
   } */
-
 }
 
