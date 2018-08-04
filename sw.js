@@ -1,4 +1,4 @@
-const version = 'v1.0.1';
+const version = 'v1.0.2';
 const cacheName = 'mws-restaurant-reviews';
 const cacheVersion = `${cacheName}-${version}`;
 
@@ -21,7 +21,7 @@ self.addEventListener('install', event => {
                 '/js/main.js',
                 '/js/register-sw.js',
                 '/js/restaurant_info.js',
-                '/js/sw.js',
+                '/sw.js',
                 '/img/1.jpg',
                 '/img/2.jpg',
                 '/img/3.jpg',
@@ -44,19 +44,6 @@ self.addEventListener('install', event => {
  * Credits: https://developers.google.com/web/fundamentals/primers/service-workers
  */
 self.addEventListener('fetch', event => {
-    if (event.request.url.includes('restaurant.html?id=')) {
-        const strippedurl = event.request.url.split('?')[0];
-        console.log('== event ==', event);
-        event.respondWith(
-            caches.match(strippedurl)
-                .then(function (response) {
-                    return response || fetch(event.response);
-                })
-        );
-        console.log('== caches ==', caches);
-        return;
-    }
-
     event.respondWith(
         caches.match(event.request)
             .then(response => {
