@@ -8,11 +8,6 @@
       "sizes": "192x192"
     },
     {
-      "src": "./img/icon-192-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
       "src": "./img/icon-512-512.png",
       "type": "image/png",
       "sizes": "512x512"
