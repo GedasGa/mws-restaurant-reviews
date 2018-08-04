@@ -1,28 +1,25 @@
-// Colors
-$color_mine_shaft_approx: #333;
-$color_romance_approx: #fdfdfd;
-$web_orange: orange;
-$color_curious_blue_approx: #3397db;
-$white: #fff;
-$color_concrete_approx: #f3f3f3;
-$color_tundora_approx: #444;
-$color_silver_chalice_approx: #aaa;
-$color_shark_approx: #252831;
-$color_gallery_approx: #eee;
-$black: black;
-$color_science_blue_approx: #0073d7;
-$color_royal_blue_approx: #4141ff;
-$color_celeste_approx: #ccc;
-$color_selective_yellow_approx: #ffb200;
-$black_60: rgba(0, 0, 0, 0.6);
-$gold_drop: #f18200;
-$color_alto_approx: #ddd;
-$color_tangerine_approx: #f58500;
-$color_storm_dust_approx: #666;
-$color_supernova_approx: #ffc800;
-$color_iron_approx: #d8d8d8;
+@charset "utf-8";
 
-//Fonts
+// Colors
+$default_dark_color: #333;
+$default_white_color: #eee;
+$black: black;
+$white: white;
+$orange: orange;
+$nav_background: #252831;
+$restaurant_list_name: #253035;
+$restaurant_hours: #666;
+$bright_orange_color: #ffb200;
+$main_background: #f3f3f3;
+$body_background: #fdfdfd;
+$white_background: #ccc;
+$color_alto_approx: #ddd;
+$footer_background: #444;
+$review_time: #d8d8d8;
+$hover_focus_outline: #3397db;
+$black_cards_shadow: rgba(0, 0, 0, 0.6);
+
+// Fonts
 $font_0: Arial;
 $font_1: Helvetica;
 $font_2: sans-serif;
@@ -33,7 +30,7 @@ $font_2: sans-serif;
 %extend_1 {
   font-family: $font_0, $font_1, $font_2;
   font-size: 1em;
-  color: $color_mine_shaft_approx;
+  color: $default_dark_color;
   line-height: 1.5;
 }
 
@@ -42,7 +39,7 @@ $font_2: sans-serif;
 %extend_2 {
   font-family: $font_0, $font_1, $font_2;
   font-size: 1em;
-  color: $color_mine_shaft_approx;
+  color: $default_dark_color;
 }
 
 //original selectors
@@ -54,11 +51,9 @@ $font_2: sans-serif;
   padding: 15px 10px;
 }
 
-
-@charset "utf-8";
 body {
   @extend %extend_1;
-  background-color: $color_romance_approx;
+  background-color: $body_background;
   margin: 0;
   position: relative;
 }
@@ -78,14 +73,14 @@ li {
   @extend %extend_2;
 }
 a {
-  color: $web_orange;
+  color: $orange;
   text-decoration: none;
   &:hover {
-    color: $color_curious_blue_approx;
+    color: $nav_background;
     text-decoration: none;
 }
   &:focus {
-    color: $color_curious_blue_approx;
+    color: $hover_focus_outline;
     text-decoration: none;
 }
   img {
@@ -136,8 +131,8 @@ figure {
 }
 footer {
   display: block;
-  background-color: $color_tundora_approx;
-  color: $color_silver_chalice_approx;
+  background-color: $footer_background;
+  color: $white;
   font-size: 0.8em;
   letter-spacing: 1px;
   padding: 25px 0;
@@ -159,7 +154,7 @@ nav {
   display: flex;
   height: 80px;
   width: 100%;
-  background-color: $color_shark_approx;
+  background-color: $nav_background;
   text-align: center;
   h1 {
     margin: auto;
@@ -177,13 +172,13 @@ section {
   padding: 0;
 }
 main {
-  background-color: $color_concrete_approx;
+  background-color: $main_background;
   min-height: 100%;
 }
 #breadcrumb {
   padding: 10px 16px 16px;
   list-style: none;
-  background-color: $color_gallery_approx;
+  background-color: $default_white_color;
   font-size: 1.2em;
   line-height: 30px;
   margin: 0;
@@ -193,10 +188,10 @@ main {
   li {
     display: inline;
     a {
-      color: $color_science_blue_approx;
+      color: $hover_focus_outline;
       text-decoration: none;
       &:hover {
-        color: $color_royal_blue_approx;
+        color: $hover_focus_outline;
         text-decoration: underline;
     }
   }
@@ -215,11 +210,11 @@ main {
 #map {
   height: 400px;
   width: 100%;
-  background-color: $color_celeste_approx;
+  background-color: $white_background;
 }
 .filter-options {
   padding: 10px;
-  background-color: $color_curious_blue_approx;
+  background-color: $nav_background;
   align-items: center;
   h2 {
     color: $white;
@@ -239,12 +234,12 @@ main {
     padding: 0 15px;
     width: 95%;
     &:focus {
-      border: 2px solid $color_selective_yellow_approx;
+      border: 2px solid $bright_orange_color;
   }
 }
 }
 #restaurants-list {
-  background-color: $color_concrete_approx;
+  background-color: $main_background;
   list-style: outside none none;
   margin: 0;
   padding: 15px;
@@ -252,7 +247,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   .restaurant-img {
-    background-color: $color_celeste_approx;
+    background-color: $white_background;
     display: block;
     margin: 0;
     max-width: 100%;
@@ -268,13 +263,13 @@ main {
     width: 100%;
     margin: 15px 0;
     padding: 0 0 25px;
-    border: 2px solid $color_celeste_approx;
+    border: 2px solid $white_background;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 30px 0;
     //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-    box-shadow: 7px 10px 5px $black_60;
+    box-shadow: 7px 10px 5px $black_cards_shadow;
     h2 {
-      color: $gold_drop;
+      color: $restaurant_list_name;
       font-family: $font_0, $font_2;
       font-size: 1.4em;
       font-weight: 200;
@@ -291,8 +286,8 @@ main {
   }
     a {
       display: inline-block;
-      background-color: $color_selective_yellow_approx;
-      color: $color_mine_shaft_approx;
+      background-color: $bright_orange_color;
+      color: $default_dark_color;
       font-size: 1em;
       padding: 8px 30px 10px;
       margin-top: 15px;
@@ -303,7 +298,7 @@ main {
       //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
       border-radius: 7px;
       &:focus {
-        border: 2px solid $color_curious_blue_approx;
+        border: 2px solid $hover_focus_outline;
         text-decoration: none;
     }
   }
@@ -328,7 +323,7 @@ main {
     top: 0;
     height: auto;
     width: 100%;
-    border-bottom: 1px solid $color_celeste_approx;
+    border-bottom: 1px solid $white_background;
     z-index: 1000;
 }
   #maincontent {
@@ -337,12 +332,12 @@ main {
     padding-bottom: 70px;
 }
   #map-container {
-    background: $color_mine_shaft_approx none repeat scroll 0 0;
+    background: $default_dark_color none repeat scroll 0 0;
     height: 40vh;
     z-index: 1;
 }
   #map {
-    background-color: $color_celeste_approx;
+    background-color: $white_background;
     height: 100%;
     width: 100%;
 }
@@ -351,8 +346,8 @@ main {
 }
 }
 #restaurant-name {
-  color: $gold_drop;
-  background-color: $color_mine_shaft_approx;
+  color: $bright_orange_color;
+  background-color: $default_dark_color;
   font-family: $font_0, $font_2;
   font-size: 2em;
   font-weight: 500;
@@ -385,7 +380,7 @@ main {
   text-align: center;
 }
 #restaurant-cuisine {
-  background-color: $color_mine_shaft_approx;
+  background-color: $default_dark_color;
   color: $color_alto_approx;
   font-size: 1.2em;
   font-weight: 300;
@@ -404,15 +399,15 @@ main {
 #reviews-container {
   @extend %extend_3;
   h2 {
-    color: $color_tangerine_approx;
+    color: $bright_orange_color;
     font-size: 2.2em;
     font-weight: 300;
     letter-spacing: 2px;
     padding-bottom: 1pt;
 }
   h3 {
-    color: $color_tangerine_approx;
-    background-color: $color_mine_shaft_approx;
+    color: $bright_orange_color;
+    background-color: $default_dark_color;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 15px;
     font-size: 1.8em;
@@ -432,7 +427,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     background-color: $white;
-    border: 2px solid $color_concrete_approx;
+    border: 2px solid $main_background;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 30px 0;
     font-family: $font_0, $font_2;
@@ -443,13 +438,13 @@ main {
     padding: 0 20px 20px;
     position: relative;
     //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-    box-shadow: 7px 10px 5px $black_60;
+    box-shadow: 7px 10px 5px $black_cards_shadow;
     width: 100%;
 }
 }
 #restaurant-hours {
   td {
-    color: $color_storm_dust_approx;
+    color: $restaurant_hours;
     width: auto;
     font-size: 1.1em;
     &:nth-child(2) {
@@ -457,8 +452,8 @@ main {
   }
 }
   tr:hover td {
-    background-color: $color_mine_shaft_approx;
-    color: $color_supernova_approx;
+    background-color: $default_dark_color;
+    color: $bright_orange_color;
 }
 }
 .review-card-header {
@@ -467,18 +462,18 @@ main {
   margin: 0 -25px;
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
   border-radius: 30px 0;
-  background-color: $color_mine_shaft_approx;
+  background-color: $default_dark_color;
   display: flex;
   justify-content: space-between;
   align-items: center;
   p {
     margin: 0;
     letter-spacing: 1px;
-    color: $color_gallery_approx;
+    color: $default_white_color;
     font-size: 1.6em;
 }
   time {
-    color: $color_iron_approx;
+    color: $review_time;
     font-size: 1.2em;
 }
 }
@@ -495,8 +490,8 @@ time {
     padding: 5px 10px;
     //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
     border-radius: 7px;
-    background-color: $color_selective_yellow_approx;
-    color: $color_gallery_approx;
+    background-color: $bright_orange_color;
+    color: $default_white_color;
     font-size: 1.1em;
     font-weight: 600;
     letter-spacing: 2px;
