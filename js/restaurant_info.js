@@ -1,5 +1,5 @@
-let restaurant;
-var newMap;
+let restaurant,
+    newMap;
 const dbVersion = 1;
 const dbName = `restaurants`;
 
@@ -34,7 +34,7 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {      
-      self.newMap = L.map('map', {
+      newMap = L.map('map', {
         center: [restaurant.latlng.lat, restaurant.latlng.lng],
         zoom: 16,
         scrollWheelZoom: false
@@ -106,7 +106,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = restaurant.photograph_alt;
+  image.alt = "a picture of " + restaurant.cuisine_type + " " + restaurant.name;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -223,8 +223,8 @@ getParameterByName = (name, url) => {
 
 function slideDown()
 {
-    var slidingDiv = document.getElementById("restaurant-address-card");
-    var slidingDivStyle = window.getComputedStyle(slidingDiv);
+    const slidingDiv = document.getElementById("restaurant-address-card");
+	const slidingDivStyle = window.getComputedStyle(slidingDiv);
     const stopPosition = 360;
 
     if (parseFloat(slidingDivStyle.marginTop) < stopPosition)
@@ -233,8 +233,8 @@ function slideDown()
 
 function slideUp()
 {
-    var slidingDiv = document.getElementById("restaurant-address-card");
-    var slidingDivStyle = window.getComputedStyle(slidingDiv);
+	const slidingDiv = document.getElementById("restaurant-address-card");
+	const slidingDivStyle = window.getComputedStyle(slidingDiv);
     const stopPosition = -360;
 
     if (parseFloat(slidingDivStyle.marginTop) > stopPosition)

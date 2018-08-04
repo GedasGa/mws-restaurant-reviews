@@ -1,24 +1,8 @@
-/**
- * TODO
- *
- * 1. Fork and clone the server repository. You’ll use this development server to develop your project code. --done
- * 2. Change the data source for your restaurant requests to pull JSON from the server, parse the response and use the response to generate the site UI.
- * 3. Cache the JSON responses for offline use by using the IndexedDB API.
- * 4. Follow the recommendations provided by Lighthouse to achieve the required performance targets.
- * 5. Submit your project code for review.
- *
- * Get Restaurants:
- * curl "http://localhost:1337/restaurants"
- * Get Restaurants by id:
- * curl "http://localhost:1337/restaurants/{3}"
- *
- */
-
 let restaurants,
     neighborhoods,
-    cuisines;
-var newMap;
-var markers = [];
+    cuisines,
+    newMap;
+let markers = [];
 const dbVersion = 1;
 const dbName = `restaurants`;
 
@@ -105,11 +89,11 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize leaflet map, called from HTML.
  */
 initMap = () => {
-  self.newMap = L.map('map', {
+  newMap = L.map('map', {
         center: [40.722216, -73.987501],
         zoom: 12,
         scrollWheelZoom: false
-      });
+  });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
     mapboxToken: 'pk.eyJ1IjoiZ2VkZ2FyIiwiYSI6ImNqam56ODdhODU3YTkza3RlZTM1cTY3MjYifQ.vwn5VXUqKaA_chIhXgKnQQ',
     maxZoom: 18,
@@ -196,7 +180,7 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = restaurant.photograph_alt;
+  image.alt = "a picture of " + restaurant.cuisine_type + " " + restaurant.name;
   li.append(image);
 
   const name = document.createElement('h2');
