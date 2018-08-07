@@ -1,4 +1,5 @@
 let restaurant,
+    reviews,
     newMap;
 const dbVersion = 1;
 const dbName = `restaurants`;
@@ -95,6 +96,31 @@ fetchRestaurantFromURL = (callback) => {
 };
 
 /**
+ * Get current restaurant reviews from page URL.
+ */
+fetchRestaurantReviewsFromURL = (callback) => {
+  if (self.reviews) { // reviews already fetched!
+    callback(null, self.reviews);
+    return;
+  }
+  const id = getParameterByName('id');
+  if (!id) { // no id found in URL
+    error = 'No restaurant id in URL';
+    callback(error, null);
+  } else {
+    DBHelper.fetchReviewsByRestaurantId(id, (error, reviews) => {
+      self.reviews = reviews;
+      if (!reviews) {
+        console.error(error);
+        return;
+      }
+      // fillRestaurantReviewsHTML();
+      callback(null, reviews)
+    });
+  }
+};
+
+/**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
@@ -116,7 +142,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fetchRestaurantReviewsFromURL((error, reviews) => {
+    if (error) { // Got an error!
+      console.error(error);
+    } else {
+      fillRestaurantReviewsHTML();
+    }
+  });
+
 };
 
 /**
@@ -140,9 +173,9 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 };
 
 /**
- * Create all reviews HTML and add them to the webpage.
+ * Fill all restaurant reviews HTML and add them to the webpage.
  */
-window.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+window.fillRestaurantReviewsHTML = (reviews = self.reviews) => {
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
@@ -156,29 +189,32 @@ window.fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     }
     const ul = document.getElementById('reviews-list');
     reviews.forEach(review => {
-        ul.appendChild(createReviewHTML(review));
+        ul.appendChild(createRestaurantReviewHTML(review));
     });
     container.appendChild(ul);
 };
 
 /**
- * Create review HTML and add it to the webpage.
+ * Create restaurant review HTML and add it to the webpage.
  */
-window.createReviewHTML = (review) => {
+window.createRestaurantReviewHTML = (review) => {
     const li = document.createElement('li');
 
     const cardHeader = document.createElement('div');
     cardHeader.className = 'review-card-header';
     const cardBody = document.createElement('div');
     cardBody.className = 'review-card-body';
+	// const cardFooter = document.createElement('div');
+	// cardFooter.className = 'review-card-footer';
 
     const name = document.createElement('p');
     name.innerHTML = review.name;
     cardHeader.appendChild(name);
 
-    const date = document.createElement('time');
-    date.innerHTML = review.date;
-    cardHeader.appendChild(date);
+    const createdAt = document.createElement('time');
+	let d = new Date(review.createdAt);
+	createdAt.innerHTML = d.toLocaleString("en-US", {hour: 'numeric', minute: 'numeric', year: 'numeric', month: 'long', day: 'numeric' });
+    cardHeader.appendChild(createdAt);
 
     li.appendChild(cardHeader);
 
@@ -191,8 +227,14 @@ window.createReviewHTML = (review) => {
     cardBody.appendChild(comments);
 
     li.appendChild(cardBody);
+    //
+	// const updatedAt = document.createElement('time');
+	// updatedAt.innerHTML = review.updatedAt;
+	// cardBody.appendChild(updatedAt);
+    //
+	// li.appendChild(cardFooter);
 
-    return li;
+	return li;
 };
 
 /**
