@@ -11,7 +11,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
   }
 
   static createIndexedDB(objects, name, version) {
@@ -33,7 +33,7 @@ class DBHelper {
     };
     dbOpenRequest.onsuccess = (event) => {
       db = event.target.result;
-      if(db.transaction){
+      if(db.transaction) {
         const transaction = db.transaction(dbName, 'readwrite');
         transaction.oncomplete = event => {
           console.log('Transaction event complete =>', event);
@@ -45,8 +45,10 @@ class DBHelper {
     dbOpenRequest.onupgradeneeded = (event) => {
       db = event.target.result;
       objectStore = db.createObjectStore(dbName, { keyPath: 'id' });
-      if(dbName === 'restaurants'){
+      if(dbName === 'restaurants') {
         objectStore.createIndex('name', 'name', { unique: false });
+      } else if (dbName === 'reviews') {
+        objectStore.createIndex('restaurant_id', 'restaurant_id', { unique: false });
       }
       objectStore.transaction.oncomplete = (event) => {
         console.log('Transaction event complete =>', event);
@@ -70,7 +72,7 @@ class DBHelper {
       objectStoreRequest = objectStore.getAll();
       objectStoreRequest.onsuccess = event => {
         data = event.target.result;
-        if(!data){
+        if(!data) {
           console.error('Error while fetching data => ', error);
             callback(error, null);
             return;
@@ -90,7 +92,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL).then((response) => {
+    fetch(DBHelper.DATABASE_URL + '/restaurants').then((response) => {
       return response.json()
     }).then(restaurants => {
       DBHelper.createIndexedDB(restaurants, dbName, dbVersion);
@@ -121,6 +123,73 @@ class DBHelper {
   }
 
   /**
+   * Fetch all favorite restaurants.
+   */
+  static fetchFavoriteRestaurants(callback) {
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const restaurant = restaurants.find(r => r.is_favorite == true);
+        if (restaurant) { // Got the restaurant
+          callback(null, restaurant);
+        } else { // No favorte restaurants in the database
+          callback('There is no favorite restaurants', null);
+        }
+      }
+    });
+  }
+
+  /**
+   * Fetch all reviews.
+   */
+  static fetchReviews(callback) {
+    fetch(DBHelper.DATABASE_URL + '/reviews').then((response) => {
+      return response.json()
+    }).then(reviews => {
+      DBHelper.createIndexedDB(reviews, 'reviews', dbVersion);
+      callback(null, reviews);
+    }).catch(error => { // Got an error from server.
+      console.error('Error fetching reviews data => ', error);
+      this.openDBGetRequest('reviews', dbVersion, callback);
+    })
+  }
+
+  /**
+   * Fetch a review by its ID.
+   */
+  static fetchReviewById(id, callback) {
+    // fetch all reviews with proper error handling.
+    DBHelper.fetchReviews((error, reviews) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const review = reviews.find(r => r.id == id);
+        if (review) { // Got the restaurant
+          callback(null, review);
+        } else { // Review does not exist in the database
+          callback('Review does not exist', null);
+        }
+      }
+    });
+  }
+
+  /**
+   * Fetch a reviews by restaurant id.
+   */
+  static fetchReviewsByRestaurantId(id, callback) {
+    fetch(DBHelper.DATABASE_URL + '/reviews/?restaurant_id=' + id).then((response) => {
+      return response.json()
+    }).then(reviews => {
+      DBHelper.createIndexedDB(reviews, 'reviews', dbVersion);
+      callback(null, reviews);
+    }).catch(error => { // Got an error from server.
+      console.error('Error fetching reviews data => ', error);
+      this.openDBGetRequest('reviews', dbVersion, callback);
+    })
+  }
+
+	/**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
   static fetchRestaurantByCuisine(cuisine, callback) {
@@ -210,6 +279,46 @@ class DBHelper {
   }
 
   /**
+   * Create a restaurant review.
+   */
+  static createRestaurantReview(data) {
+    fetch(DBHelper.DATABASE_URL + '/reviews', {
+      method: 'POST',
+      body: data
+    }).then((response) => {
+		console.log(response.json());
+    }).catch(error => { // Got an error from server.
+        console.error('Error sending restaurant review data => ', error);
+    })
+  }
+
+  /**
+   * Favorite a restaurant.
+   */
+  static favoriteRestaurant(id, data) {
+    fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=true', {
+      method: 'PUT'
+    }).then((response) => {
+        console.log(response.json());
+    }).catch(error => { // Got an error from server.
+        console.error('Error trying to add a restaurant to favorites => ', error);
+    })
+  }
+
+  /**
+   * Unfavorite a restaurant.
+   */
+  static unfavoriteRestaurant(id, data) {
+    fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=false', {
+	  method: 'PUT'
+    }).then((response) => {
+        console.log(response.json());
+    }).catch(error => { // Got an error from server.
+        console.error('Error trying to remove a restaurant from favorites => ', error);
+    })
+  }
+
+  /**
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
@@ -226,16 +335,17 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
-    // https://leafletjs.com/reference-1.3.0.html#marker  
+  static mapMarkerForRestaurant(restaurant, map) {
+    // https://leafletjs.com/reference-1.3.0.html#marker
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-      {title: restaurant.name,
-      alt: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant)
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
       });
-      marker.addTo(newMap);
+    marker.addTo(newMap);
     return marker;
-  } 
+  }
   /* static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
