@@ -44,6 +44,27 @@
       <section id="reviews-container">
         <ul id="reviews-list"></ul>
       </section>
+      <section id="review-form-container">
+        <h3>Your Review</h3>
+        <form id="review-form" action="" target="_blank" aria-label="a restaurant review form">
+          <div>
+            <label for="name">Your name <abbr title="required">*</abbr></label>
+            <input id="name" name="name" type="text" placeholder="Please enter your name" aria-required="true" onblur="checkValidity('name', ' ', 'Invalid name entered!');">
+          </div>
+          <div>
+            <label for="rating">Rating <abbr title="required">*</abbr></label>
+            <input id="rating" name="rating" type="number" min="1" max="5" placeholder="Please select rating" aria-required="true" onblur="checkValidity('rating', ' ', 'Invalid rating entered!');">
+          </div>
+          <div>
+            <label for="comment">Review <abbr title="required">*</abbr></label>
+            <textarea id="comment" name="comment" cols="10" rows="10" placeholder="Please enter your review comment" aria-required="true"></textarea>
+          </div>
+          <div>
+            <button id="reset-review" type="reset" name="submit">Reset</button>
+            <button id="submit-review" type="submit" name="submit" onclick="sendReview()">Send Review</button>
+          </div>
+        </form>
+      <section>
     </main>
 
     <footer id="footer">
@@ -56,6 +77,38 @@
     <script type="text/javascript" src="js/register-sw.js"></script>
     <script type="text/javascript" src="sw.js"></script>
     <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script> -->
+    <script type="application/javascript">
+		function removeOldAlert()
+		{
+			var oldAlert = document.getElementById("alert");
+			if (oldAlert)
+				document.body.removeChild(oldAlert);
+		}
+
+		function addAlert(aMsg)
+		{
+			removeOldAlert();
+			var newAlert = document.createElement("div");
+			newAlert.setAttribute("role", "alert");
+			newAlert.setAttribute("id", "alert");
+			var msg = document.createTextNode(aMsg);
+			newAlert.appendChild(msg);
+			document.body.appendChild(newAlert);
+		}
+
+		function checkValidity(aID, aSearchTerm, aMsg)
+		{
+			var elem = document.getElementById(aID);
+			var invalid = (elem.value.indexOf(aSearchTerm) < 0);
+			if (invalid) {
+				elem.setAttribute("aria-invalid", "true");
+				addAlert(aMsg);
+			} else {
+				elem.setAttribute("aria-invalid", "false");
+				removeOldAlert();
+			}
+		}
+    </script>
   </body>
 
 </html>
