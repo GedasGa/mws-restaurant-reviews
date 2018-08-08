@@ -246,6 +246,29 @@ main {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
+  /**
+  * Credits: https://css-tricks.com/recreating-the-twitter-heart-animation/
+  */
+  [id='toggle-favorite'] {
+    position: absolute;
+    left: -100vw;
+    &:checked + label {
+      color: #e2264d;
+      will-change: font-size;
+      animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+    }
+  }
+  [for='toggle-favorite'] {
+    align-self: center;
+    color: #aab8c2;
+    font-size: 3em;
+    cursor: pointer;
+    position: absolute;
+    margin-left: 15px;
+  }
+  @keyframes heart {
+    0%, 15% { font-size: 0; }
+  }
   .restaurant-img {
     background-color: $white_background;
     display: block;
@@ -395,6 +418,30 @@ main {
 }
 #restaurant-container {
   @extend %extend_3;
+
+  /**
+  * Credits: https://css-tricks.com/recreating-the-twitter-heart-animation/
+  */
+  [id='toggle-favorite'] {
+    position: absolute;
+    left: -100vw;
+    &:checked + label {
+      color: #e2264d;
+      will-change: font-size;
+      animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+    }
+  }
+  [for='toggle-favorite'] {
+    align-self: center;
+    color: #aab8c2;
+    font-size: 3em;
+    cursor: pointer;
+    position: absolute;
+    margin-left: 15px;
+  }
+  @keyframes heart {
+    0%, 15% { font-size: 0; }
+  }
 }
 #reviews-container {
   @extend %extend_3;
@@ -514,15 +561,16 @@ time {
     font-weight: 200;
     letter-spacing: 2px;
     text-align: center;
+    align-items: center;
     width: 100%;
-    padding: 10px 0;
+    padding: 15px 10px;
   }
   #review-form {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    width: 80%;
+    align-self: center;
+    width: 100%;
     margin: 2%;
     div {
       display: flex;
@@ -530,39 +578,39 @@ time {
       align-items: center;
       width: 100%;
     }
-  }
-  input[type="text"],
-  input[type="number"],
-  textarea {
-    width: 100%;
-    box-shadow: inset 0 1px 2px $black_cards_shadow, 0 1px 0 #DDD;
-    border: 1px solid #CCC;
-    background: $white;
-    margin: 0 0 5px;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  button[type="submit"] {
-    cursor: pointer;
-    width: calc((100% / 2) - 2%);
-    border: none;
-    background: #3BAF55;
-    background-image: linear-gradient(bottom, #4CAF55 0%, #3BAF55 52%);
-    color: $white;
-    margin: 1%;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  button[type="reset"] {
-    cursor :pointer;
-    width: calc((100% / 2) - 2%);
-    border: none;
-    background: $white;
-    background-image: linear-gradient(bottom, #e7e7e7 0%, #d8e7e7 52%);
-    color: $black;
-    margin: 1%;
-    padding: 10px;
-    border-radius: 5px;
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      box-shadow: inset 0 1px 2px $black_cards_shadow, 0 1px 0 #DDD;
+      border: 1px solid #CCC;
+      background: $white;
+      margin: 0 0 5px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    button[type="submit"] {
+      cursor: pointer;
+      width: calc((100% / 2) - 2%);
+      border: none;
+      background: #3BAF55;
+      background-image: linear-gradient(bottom, #4CAF55 0%, #3BAF55 52%);
+      color: $white;
+      margin: 1%;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    button[type="reset"] {
+      cursor :pointer;
+      width: calc((100% / 2) - 2%);
+      border: none;
+      background: $white;
+      background-image: linear-gradient(bottom, #e7e7e7 0%, #d8e7e7 52%);
+      color: $black;
+      margin: 1%;
+      padding: 10px;
+      border-radius: 5px;
+    }
   }
 }
 @media only screen and(min-width: 280px) {
@@ -649,7 +697,7 @@ time {
     width: calc((100% / 2) - 10%);
   }
   #review-form {
-    width: 100%;
+    width: 80%;
     margin: 2%;
   }
   #restaurants-list li {
