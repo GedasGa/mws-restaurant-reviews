@@ -106,3 +106,13 @@ self.addEventListener('activate', event => {
             .catch(err => console.log('Could not delete the old cache', err))
 	);
 });
+
+/**
+ * On message event, check message text and do corresponding
+ * actions according to the message
+ */
+self.addEventListener('message', event => {
+	if(event.data.action == 'skipWaiting') {
+		self.skipWaiting();
+	}
+});
