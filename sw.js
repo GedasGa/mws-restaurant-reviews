@@ -1,4 +1,4 @@
-const version = 'v1.0.2';
+const version = 'v1.0.3';
 const cacheName = 'mws-restaurant-reviews';
 const cacheVersion = `${cacheName}-${version}`;
 
@@ -82,4 +82,26 @@ self.addEventListener('fetch', event => {
             })
             .catch(err => console.log('Could not handle the fetch request', err))
     );
+});
+
+/**
+ * On activate event, check if found there is a newer cache version,
+ * if so delete the old cache
+ */
+self.addEventListener('activate', event => {
+	event.waitUntil(
+		caches.keys()
+            .then(cacheNames => {
+				return Promise.all(
+					cacheNames.filter(cacheName => {
+						return cacheName.startsWith(cacheName)
+							&& !cacheName.endsWith(version);
+					})
+						.map(cacheName => {
+							return caches.delete(cacheName);
+						})
+				);
+            })
+            .catch(err => console.log('Could not delete the old cache', err))
+	);
 });
