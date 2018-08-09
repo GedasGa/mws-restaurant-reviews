@@ -702,7 +702,7 @@ time {
   }
   #restaurants-list li {
     width: calc((100% / 2) - 7%);
-    margin: 3%;
+    margin: 2% 3%;
   }
 }
 @media only screen and(min-width : 992px) {
@@ -716,7 +716,7 @@ time {
     margin-top: -25%;
   }
   #restaurants-list li {
-    margin: 0 3%;
+    margin: 2% 2%;
   }
   #reviews-list li {
     width: calc((100% / 2) - 7%);
@@ -743,12 +743,12 @@ time {
   }
   #restaurants-list li {
     width: calc((100% / 3) - 2.5%);
-    margin: 2% 1%;
+    margin: 1% 2%;
   }
 }
 @media only screen and(min-width : 1680px) {
   #restaurants-list li {
     width: calc((100% / 4) - 2.5%);
-    margin: 2% 1%;
+    margin: 1% 1%;
   }
 }
