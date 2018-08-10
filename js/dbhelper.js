@@ -56,45 +56,29 @@ class DBHelper {
   static addToIndexedDB(name, version, ObjStore, objects) {
     DBHelper.openIndexedDB(name, version).then(function(db) {
       let tx = db.transaction(ObjStore, 'readwrite');
-      console.log("tx => "+ tx);
-		let store = tx.objectStore(ObjStore);
-		console.log("store => "+ store);
+      let store = tx.objectStore(ObjStore);
 
-      return Promise.all(objects.map(function(object) {
-              console.log('Adding item => ', object);
-              return store.add(object);
-          })
-      ).catch(function(e) {
-          tx.abort();
-          console.log(e);
-      }).then(function() {
-          console.log('All items added successfully!');
+      objects.forEach((object) => {
+        store.put(object);
       });
+
+      return tx.complete;
     });
   };
 
-  static openDBGetRequest(dbName, dbStore, dbVersion, callback){
-    const idb =  window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    let objectStore, objectStoreRequest, db, data;
-    const request = idb.open(dbName, dbVersion);
-    request.onsuccess = event => {
-      db = request.result;
-      const transaction = db.transaction([dbStore], 'readonly');
-      transaction.oncomplete = event => {
-        console.log('Transaction event complete =>', event);
-      };
-      objectStore = transaction.objectStore(dbStore);
-      objectStoreRequest = objectStore.getAll();
-      objectStoreRequest.onsuccess = event => {
-        data = event.target.result;
-        if(!data) {
-          console.error('Error while fetching data => ', error);
-            callback(error, null);
-            return;
+  static getFromIndexedDB(name, version, ObjStore, callback){
+    DBHelper.openIndexedDB(name, version).then(function(db) {
+      let tx = db.transaction(ObjStore);
+      let store = tx.objectStore(ObjStore);
+
+      return store.getAll().then((response) => {
+        if(response.length) {
+          callback(null, response);
+        } else {
+          callback('There is no records in IndexedDB', null);
         }
-        callback(null, data);
-      }
-    }
+      });
+    });
   }
 
   /**
@@ -102,16 +86,19 @@ class DBHelper {
    */
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL + '/restaurants').then((response) => {
-      return response.json()
+      return response.json();
     }).then(restaurants => {
-	  var something = DBHelper.addToIndexedDB(dbName, dbVersion, 'restaurants', restaurants);
-	  console.log(something);
-      callback(null, restaurants);
+      if(restaurants) {
+        DBHelper.addToIndexedDB(dbName, dbVersion, 'restaurants', restaurants);
+        callback(null, restaurants);
+      } else {
+        DBHelper.getFromIndexedDB(dbName, dbVersion, 'restaurants', callback);
+        console.error('Error fetching restaurants data => ', error);
+      }
+    }).catch(error => { // Got an error from server.
+      console.error('Error fetching restaurants data => ', error);
+      DBHelper.getFromIndexedDB(dbName, dbVersion, 'restaurants', callback);
     });
-    // .catch(error => { // Got an error from server.
-    //   console.error('Error fetching restaurants data => ', error);
-    //   this.openDBGetRequest(dbName, 'restaurants', dbVersion, callback);
-    // })
   }
 
   /**
@@ -158,13 +145,17 @@ class DBHelper {
     fetch(DBHelper.DATABASE_URL + '/reviews').then((response) => {
       return response.json()
     }).then(reviews => {
-      DBHelper.addToIndexedDB(dbName, dbVersion, 'reviews', reviews);
-      callback(null, reviews);
-    });
-	// .catch(error => { // Got an error from server.
-	// console.error('Error fetching reviews data => ', error);
-	// this.openDBGetRequest(dbName, 'reviews', dbVersion, callback);
-	// })
+      if(reviews) {
+        DBHelper.addToIndexedDB(dbName, dbVersion, 'reviews', reviews);
+        callback(null, reviews);
+      } else {
+        DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
+        console.error('Error fetching reviews data => ', error);
+      }
+	}).catch(error => { // Got an error from server.
+		console.error('Error fetching restaurants data => ', error);
+		DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
+	});
   }
 
   /**
@@ -193,12 +184,17 @@ class DBHelper {
     fetch(DBHelper.DATABASE_URL + '/reviews/?restaurant_id=' + id).then((response) => {
       return response.json()
     }).then(reviews => {
-	  DBHelper.addToIndexedDB(dbName, dbVersion, 'reviews', reviews);
-      callback(null, reviews);
-    }).catch(error => { // Got an error from server.
-      console.error('Error fetching reviews data => ', error);
-      this.openDBGetRequest(dbName, 'reviews', dbVersion, callback);
-    })
+      if(reviews) {
+        DBHelper.addToIndexedDB(dbName, dbVersion, 'reviews', reviews);
+        callback(null, reviews);
+      } else {
+        DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
+        console.error('Error fetching reviews data => ', error);
+      }
+	}).catch(error => { // Got an error from server.
+      console.error('Error fetching restaurants data => ', error);
+      DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
+	});
   }
 
 	/**
