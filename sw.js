@@ -115,4 +115,10 @@ self.addEventListener('message', event => {
 	if(event.data.action == 'skipWaiting') {
 		self.skipWaiting();
 	}
+	if(event.data.action == 'syncOfflineReviews') {
+		DBHelper.syncOfflineData('offline-reviews');
+	}
+	if(event.data.action == 'syncOfflineFavorites') {
+		DBHelper.syncOfflineData('offline-favorites');
+	}
 });
