@@ -197,6 +197,15 @@ class DBHelper {
 	});
   }
 
+  /**
+   * Synchronise offline data with the server and then remove data from IndexedDB
+   */
+  static syncOfflineData(objStore) {
+    DBHelper.getFromIndexedDB(dbName, dbVersion, objStore, (error, data) => {
+        console.log(objStore + ' => ' + data);
+    });
+  }
+
 	/**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
@@ -299,33 +308,37 @@ class DBHelper {
     }).catch(error => { // Got an error from server.
         console.error('Error sending restaurant review data => ', error);
 		callback(error, null);
-    })
+    });
   }
 
   /**
    * Favorite a restaurant.
    */
-  static favoriteRestaurant(id, data) {
+  static favoriteRestaurant(id, callback) {
     fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=true', {
       method: 'PUT'
-    }).then((response) => {
-        console.log(response.json());
-    }).catch(error => { // Got an error from server.
-        console.error('Error trying to add a restaurant to favorites => ', error);
-    })
+	}).then((response) => {
+		console.log(response.json());
+		callback(null, response);
+	}).catch(error => { // Got an error from server.
+		console.error('Error trying to add a restaurant to favorites => ', error);
+		callback(error, null);
+	});
   }
 
   /**
    * Unfavorite a restaurant.
    */
-  static unfavoriteRestaurant(id, data) {
+  static unfavoriteRestaurant(id, callback) {
     fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=false', {
 	  method: 'PUT'
     }).then((response) => {
         console.log(response.json());
+		callback(null, response);
     }).catch(error => { // Got an error from server.
         console.error('Error trying to remove a restaurant from favorites => ', error);
-    })
+		callback(error, null);
+    });
   }
 
   /**
@@ -367,4 +380,3 @@ class DBHelper {
     return marker;
   } */
 }
-
