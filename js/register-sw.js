@@ -44,7 +44,7 @@ function ManageServiceWorker() {
 				});
 
 				return reg.sync.register('syncOfflineData');
-		    })
+			})
 			.catch(function(err) {
 				console.log('Service worker registration failed:', err);
 			});
@@ -65,7 +65,7 @@ function ManageServiceWorker() {
 	};
 
 	this.updateReady = function(worker) {
-	    let confirmDialog = window.confirm('New Service Worker version available. Would you like to update?');
+		let confirmDialog = window.confirm('New Service Worker version available. Would you like to update?');
 		if (confirmDialog == true) {
 			worker.postMessage({action: 'skipWaiting'});
 		} else {

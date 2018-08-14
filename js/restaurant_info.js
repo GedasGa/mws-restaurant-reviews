@@ -50,14 +50,14 @@ initMap = () => {
 			}).addTo(newMap);
 			fillBreadcrumb();
 			DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
-	  // fill reviews
-	  fetchRestaurantReviewsFromURL((error, reviews) => {
+			// fill reviews
+			fetchRestaurantReviewsFromURL((error, reviews) => {
 				if (error) { // Got an error!
-		  console.error(error);
+					console.error(error);
 				} else {
-		  console.log('fetchRestaurantReviewsFromURL successful');
+					console.log('fetchRestaurantReviewsFromURL successful');
 				}
-	  });
+			});
 		}
 	});
 };
@@ -115,7 +115,7 @@ fetchRestaurantReviewsFromURL = (callback) => {
 				console.error(error);
 				return;
 			}
-	  fillRestaurantReviewsHTML();
+			fillRestaurantReviewsHTML();
 			callback(null, reviews);
 		});
 	}
@@ -290,8 +290,6 @@ sendRestaurantReview = () => {
 	const data = getRestaurantReviewFormData(restaurant = self.restaurant);
 	const reviewsList = document.getElementById('reviews-list');
 	if(navigator.onLine) {
-		console.log('I am online => ', data);
-
 		// Reset form
 		form.reset();
 
@@ -308,23 +306,19 @@ sendRestaurantReview = () => {
 				} else {
 					// Focus on last reviews
 					reviewsList.lastChild.focus();
-					console.log('fetchRestaurantReviewsFromURL successful -- sending reviews');
-					console.log(reviews);
 				}
 			});
 		});
-		console.log('restaurant reviews updated');
 	} else {
 		data.createdAt = Date.now();
-		console.log('I am offline => ', data);
 
 		DBHelper.addToIndexedDB(dbName, dbVersion, 'offline-reviews', [data]);
 
 		fillRestaurantReviewsHTML([data]);
 		reviewsList.lastChild.focus();
 
+		// Reset form
 		form.reset();
-		console.log('restaurant review saved offline');
 	}
 };
 
@@ -336,33 +330,23 @@ sendFavoriteRestaurant = (restaurant = self.restaurant) => {
 	const checkbox = document.getElementById('toggle-favorite');
 
 	data.checked = checkbox.checked;
-	console.log('restaurant id => ' + restaurant.id);
-	console.log('checkbox => ' + data.checked);
 
 	if(navigator.onLine) {
-		console.log('I am online => ', data.checked);
-
 		if(data.checked) {
 			DBHelper.favoriteRestaurant(restaurant.id, function() {
-				// fill reviews
+				// fill restaurant data
 				fetchRestaurantFromURL((error, restaurant) => {
 					if (error) { // Got an error!
 						console.error(error);
-					} else {
-						console.log('restaurant set as favorite');
-						console.log(restaurant);
 					}
 				});
 			});
 		} else {
 			DBHelper.unfavoriteRestaurant(restaurant.id, function() {
-				// fill reviews
+				// fill restaurant data
 				fetchRestaurantFromURL((error, restaurant) => {
 					if (error) { // Got an error!
 						console.error(error);
-					} else {
-						console.log('restaurant set as unfavorite');
-						console.log(restaurant);
 					}
 				});
 			});
@@ -370,11 +354,8 @@ sendFavoriteRestaurant = (restaurant = self.restaurant) => {
 	} else {
 		data.createdAt = Date.now();
 		data.restaurant_id = restaurant.id;
-		console.log('I am offline => ', data.checked);
 
 		DBHelper.addToIndexedDB(dbName, dbVersion, 'offline-favorites', [data]);
-
-		console.log('favorite restaurant saved offline');
 	}
 };
 

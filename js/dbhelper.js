@@ -20,8 +20,8 @@ class DBHelper {
    */
 	static openIndexedDB(name, version) {
 		// if (!('indexedDB' in window)) {
-	    // console.log('This browser doesn\'t support IndexedDB');
-	    // return;
+		// console.log('This browser doesn\'t support IndexedDB');
+		// return;
 		// }
 
 		const dbPromise = idb.open(name, version, function(upgradeDb) {
@@ -31,19 +31,15 @@ class DBHelper {
 				// execute when the database is first created
 				// (oldVersion is 0)
 			case 1:
-		  console.log('Creating the restaurants object store');
-		  const restaurantsStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
-		  restaurantsStore.createIndex('name', 'name', { unique: false });
+				const restaurantsStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+				restaurantsStore.createIndex('name', 'name', { unique: false });
 			case 2:
-		  console.log('Creating the reviews object store');
-		  const reviewsStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
-		  reviewsStore.createIndex('restaurant_id', 'restaurant_id', { unique: false });
+				const reviewsStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
+				reviewsStore.createIndex('restaurant_id', 'restaurant_id', { unique: false });
 			case 3:
-		  console.log('Creating the offline-reviews object store');
-		  upgradeDb.createObjectStore('offline-reviews', {keyPath: 'createdAt'});
+				upgradeDb.createObjectStore('offline-reviews', {keyPath: 'createdAt'});
 			case 4:
-		  console.log('Creating the restaurants object store');
-		  upgradeDb.createObjectStore('offline-favorites', {keyPath: 'createdAt'});
+				upgradeDb.createObjectStore('offline-favorites', {keyPath: 'createdAt'});
 			}
 		});
 
@@ -110,10 +106,8 @@ class DBHelper {
 				callback(null, restaurants);
 			} else {
 				DBHelper.getFromIndexedDB(dbName, dbVersion, 'restaurants', callback);
-				console.error('Error fetching restaurants data => ', error);
 			}
 		}).catch(error => { // Got an error from server.
-			console.error('Error fetching restaurants data => ', error);
 			DBHelper.getFromIndexedDB(dbName, dbVersion, 'restaurants', callback);
 		});
 	}
@@ -167,10 +161,8 @@ class DBHelper {
 				callback(null, reviews);
 			} else {
 				DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
-				console.error('Error fetching reviews data => ', error);
 			}
 		}).catch(error => { // Got an error from server.
-			console.error('Error fetching restaurants data => ', error);
 			DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
 		});
 	}
@@ -206,20 +198,9 @@ class DBHelper {
 				callback(null, reviews);
 			} else {
 				DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
-				console.error('Error fetching reviews data => ', error);
 			}
 		}).catch(error => { // Got an error from server.
-			console.error('Error fetching restaurants data => ', error);
 			DBHelper.getFromIndexedDB(dbName, dbVersion, 'reviews', callback);
-		});
-	}
-
-	/**
-   * Synchronise offline data with the server and then remove data from IndexedDB
-   */
-	static syncOfflineData(objStore) {
-		DBHelper.getFromIndexedDB(dbName, dbVersion, objStore, (error, data) => {
-			console.log(objStore + ' => ' + data);
 		});
 	}
 
@@ -322,7 +303,6 @@ class DBHelper {
 		}).then((response) => {
 			callback(null, response);
 		}).catch(error => { // Got an error from server.
-			console.error('Error sending restaurant review data => ', error);
 			callback(error, null);
 		});
 	}
@@ -334,10 +314,8 @@ class DBHelper {
 		fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=true', {
 			method: 'PUT'
 		}).then((response) => {
-			console.log(response.json());
 			callback(null, response);
 		}).catch(error => { // Got an error from server.
-			console.error('Error trying to add a restaurant to favorites => ', error);
 			callback(error, null);
 		});
 	}
@@ -347,12 +325,10 @@ class DBHelper {
    */
 	static unfavoriteRestaurant(id, callback) {
 		fetch(DBHelper.DATABASE_URL + '/restaurants/' + id + '?is_favorite=false', {
-	  method: 'PUT'
+			method: 'PUT'
 		}).then((response) => {
-			console.log(response.json());
 			callback(null, response);
 		}).catch(error => { // Got an error from server.
-			console.error('Error trying to remove a restaurant from favorites => ', error);
 			callback(error, null);
 		});
 	}
@@ -388,13 +364,11 @@ class DBHelper {
 				let promises = [];
 				favorites.forEach(favorite => {
 					if(favorite.checked){
-						console.log('Pazymeta TRUE- '+ favorite.checked);
 						let promise = DBHelper.favoriteRestaurant(favorite.restaurant_id, (error, response) => {
 							DBHelper.deleteFromIndexedDB(dbName, dbVersion, objStoreSrc, favorite.createdAt);
 						});
 						promises.push(promise);
 					} else {
-						console.log('Pazymeta- false');
 						let promise = DBHelper.unfavoriteRestaurant(favorite.restaurant_id, (error, response) => {
 							DBHelper.deleteFromIndexedDB(dbName, dbVersion, objStoreSrc, favorite.createdAt);
 						});

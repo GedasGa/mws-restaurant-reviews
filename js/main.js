@@ -24,8 +24,6 @@ fetchRestaurants = () => {
 	DBHelper.fetchRestaurants((error, restaurants) => {
 		if (error) { // Got an error
 			console.error(error);
-		} else {
-			console.log(restaurants);
 		}
 	});
 };
