@@ -151,7 +151,6 @@ menu {
 }
 nav {
   display: block;
-  display: flex;
   height: 80px;
   width: 100%;
   background-color: $nav_background;
@@ -234,7 +233,7 @@ main {
     padding: 0 15px;
     width: 95%;
     &:focus {
-      border: 2px solid $bright_orange_color;
+      border: 2px solid $hover_focus_outline;
   }
 }
 }
@@ -246,29 +245,6 @@ main {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  /**
-  * Credits: https://css-tricks.com/recreating-the-twitter-heart-animation/
-  */
-  [id='toggle-favorite'] {
-    position: absolute;
-    left: -100vw;
-    &:checked + label {
-      color: #e2264d;
-      will-change: font-size;
-      animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
-    }
-  }
-  [for='toggle-favorite'] {
-    align-self: center;
-    color: #aab8c2;
-    font-size: 3em;
-    cursor: pointer;
-    position: absolute;
-    margin-left: 15px;
-  }
-  @keyframes heart {
-    0%, 15% { font-size: 0; }
-  }
   .restaurant-img {
     background-color: $white_background;
     display: block;
@@ -418,17 +394,21 @@ main {
 }
 #restaurant-container {
   @extend %extend_3;
-
   /**
   * Credits: https://css-tricks.com/recreating-the-twitter-heart-animation/
   */
   [id='toggle-favorite'] {
     position: absolute;
-    left: -100vw;
+    margin-left: 29px;
+    margin-top: 29px;
+    opacity: 0.1;
     &:checked + label {
       color: #e2264d;
       will-change: font-size;
       animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+    }
+    &:focus + label {
+      border: 2px solid $hover_focus_outline;
     }
   }
   [for='toggle-favorite'] {
@@ -594,7 +574,7 @@ time {
       width: calc((100% / 2) - 2%);
       border: none;
       background: #3BAF55;
-      background-image: linear-gradient(bottom, #4CAF55 0%, #3BAF55 52%);
+      background-image: linear-gradient(to top, #4CAF55 0%, #3BAF55 52%);
       color: $white;
       margin: 1%;
       padding: 10px;
@@ -605,7 +585,7 @@ time {
       width: calc((100% / 2) - 2%);
       border: none;
       background: $white;
-      background-image: linear-gradient(bottom, #e7e7e7 0%, #d8e7e7 52%);
+      background-image: linear-gradient(to top, #e7e7e7 0%, #d8e7e7 52%);
       color: $black;
       margin: 1%;
       padding: 10px;
