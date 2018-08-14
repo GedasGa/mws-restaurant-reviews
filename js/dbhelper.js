@@ -19,10 +19,10 @@ class DBHelper {
    * restaurants, reviews, offline reviews and favorites data
    */
   static openIndexedDB(name, version) {
-    if (!('indexedDB' in window)) {
-	  console.log('This browser doesn\'t support IndexedDB');
-	  return;
-    }
+    // if (!('indexedDB' in window)) {
+	//   console.log('This browser doesn\'t support IndexedDB');
+	//   return;
+    // }
 
     const dbPromise = idb.open(name, version, function(upgradeDb) {
       switch (upgradeDb.oldVersion) {
@@ -53,10 +53,10 @@ class DBHelper {
   /**
    * Add objects to the corresponding object store
    */
-  static addToIndexedDB(name, version, ObjStore, objects) {
-    DBHelper.openIndexedDB(name, version).then(function(db) {
-      let tx = db.transaction(ObjStore, 'readwrite');
-      let store = tx.objectStore(ObjStore);
+  static addToIndexedDB(name, version, objStore, objects) {
+    return DBHelper.openIndexedDB(name, version).then(function(db) {
+      let tx = db.transaction(objStore, 'readwrite');
+      let store = tx.objectStore(objStore);
 
       objects.forEach((object) => {
         store.put(object);
@@ -66,10 +66,10 @@ class DBHelper {
     });
   };
 
-  static getFromIndexedDB(name, version, ObjStore, callback){
+  static getFromIndexedDB(name, version, objStore, callback){
     DBHelper.openIndexedDB(name, version).then(function(db) {
-      let tx = db.transaction(ObjStore);
-      let store = tx.objectStore(ObjStore);
+      let tx = db.transaction(objStore);
+      let store = tx.objectStore(objStore);
 
       return store.getAll().then((response) => {
         if(response.length) {
@@ -78,6 +78,17 @@ class DBHelper {
           callback('There is no records in IndexedDB', null);
         }
       });
+    });
+  }
+
+  static deleteFromIndexedDB(name, version, objStore, id) {
+    DBHelper.openIndexedDB(name, version).then(function(db) {
+        let tx = db.transaction(objStore, 'readwrite');
+        let store =  tx.objectStore(objStore);
+
+        store.delete(id);
+
+        return tx.complete;
     });
   }
 
@@ -303,7 +314,6 @@ class DBHelper {
       method: 'POST',
       body: JSON.stringify(data)
     }).then((response) => {
-		console.log(response.json());
 		callback(null, response);
     }).catch(error => { // Got an error from server.
         console.error('Error sending restaurant review data => ', error);

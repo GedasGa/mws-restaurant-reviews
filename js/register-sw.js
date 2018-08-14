@@ -42,6 +42,8 @@ function ManageServiceWorker() {
 					// a new service worker being installed.
                     manageServiceWorker.trackInstalling(reg.installing);
                 });
+
+				return reg.sync.register('syncOfflineData');
 		    })
             .catch(function(err) {
                 console.log('Service worker registration failed:', err);

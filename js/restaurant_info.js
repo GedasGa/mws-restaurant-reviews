@@ -192,11 +192,6 @@ fillRestaurantReviewsHTML = (reviews = self.reviews) => {
     }
     const ul = document.getElementById('reviews-list');
 
-	// Remove reviews before adding
-	while(ul.firstChild){
-		ul.removeChild(ul.firstChild);
-	}
-
     reviews.forEach(review => {
         ul.appendChild(createRestaurantReviewHTML(review));
     });
@@ -300,6 +295,11 @@ sendRestaurantReview = () => {
 		// Reset form
 		form.reset();
 
+		// Remove reviews before adding
+		while(reviewsList.firstChild){
+			reviewsList.removeChild(reviewsList.firstChild);
+		}
+
 		DBHelper.createRestaurantReview(data, function() {
 			// fill reviews
 			fetchRestaurantReviewsFromURL((error, reviews) => {
@@ -316,7 +316,7 @@ sendRestaurantReview = () => {
 		console.log('restaurant reviews updated');
 	} else {
 		data.createdAt = Date.now();
-		console.log('I am online => ', data);
+		console.log('I am offline => ', data);
 
 		DBHelper.addToIndexedDB(dbName, dbVersion, 'offline-reviews', [data]);
 
@@ -377,17 +377,6 @@ sendFavoriteRestaurant = (restaurant = self.restaurant) => {
 		console.log('favorite restaurant saved offline');
 	}
 };
-
-window.addEventListener('online', function(e) {
-	if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.ready.then(e => {
-			navigator.serviceWorker.controller.postMessage({ action: 'syncOfflineReviews' });
-			navigator.serviceWorker.controller.postMessage({ action: 'syncOfflineFavorites' });
-		});
-	} else {
-		console.log('Service Worker does not exist' + e);
-	}
-});
 
 function slideDown()
 {

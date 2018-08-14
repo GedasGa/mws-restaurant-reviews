@@ -1,6 +1,10 @@
+importScripts('js/idb.js', 'js/dbhelper.js');
+
 const version = 'v1.0.3';
 const cacheName = 'mws-restaurant-reviews';
 const cacheVersion = `${cacheName}-${version}`;
+const dbVersion = 1;
+const dbName = `mws-restaurant-reviews`;
 
 /**
  * Install service worker and create a cache
@@ -115,10 +119,58 @@ self.addEventListener('message', event => {
 	if(event.data.action == 'skipWaiting') {
 		self.skipWaiting();
 	}
-	if(event.data.action == 'syncOfflineReviews') {
-		DBHelper.syncOfflineData('offline-reviews');
-	}
-	if(event.data.action == 'syncOfflineFavorites') {
-		DBHelper.syncOfflineData('offline-favorites');
+});
+
+/**
+ * On sync event, synchronise offline data with the server
+ */
+self.addEventListener('sync', function(event) {
+	if(event.tag == 'syncOfflineData') {
+		console.log('Background sync offline data');
+		event.waitUntil(syncOfflineReviews('offline-reviews', 'reviews'));
+		event.waitUntil(syncOfflineFavorites('offline-favorites'));
 	}
 });
+
+function syncOfflineReviews(objStoreSrc, objStoreDst) {
+	return DBHelper.getFromIndexedDB(dbName, dbVersion, objStoreSrc, (error, reviews) => {
+		// Send reviews to the server
+		if(reviews) {
+			let promises = [];
+			reviews.forEach(review => {
+				let myPromise = DBHelper.createRestaurantReview(review, (error, response) => {
+					DBHelper.addToIndexedDB(dbName, dbVersion, objStoreDst, [review]).then(() => {
+						DBHelper.deleteFromIndexedDB(dbName, dbVersion, objStoreSrc, review.createdAt);
+					})
+				});
+				promises.push(myPromise);
+			});
+			return Promise.all(promises);
+		}
+	});
+}
+
+function syncOfflineFavorites(objStoreSrc) {
+	return DBHelper.getFromIndexedDB(dbName, dbVersion, objStoreSrc, (error, favorites) => {
+		// Send reviews to the server
+		if(favorites) {
+			let promises = [];
+			favorites.forEach(favorite => {
+				if(favorite.checked){
+					console.log('Pazymeta TRUE- '+ favorite.checked);
+					let myPromise = DBHelper.favoriteRestaurant(favorite.restaurant_id, (error, response) => {
+						DBHelper.deleteFromIndexedDB(dbName, dbVersion, objStoreSrc, favorite.createdAt);
+					});
+					promises.push(myPromise);
+				} else {
+					console.log('Pazymeta- false');
+					let myPromise = DBHelper.unfavoriteRestaurant(favorite.restaurant_id, (error, response) => {
+						DBHelper.deleteFromIndexedDB(dbName, dbVersion, objStoreSrc, favorite.createdAt);
+					});
+					promises.push(myPromise);
+				}
+			});
+			return Promise.all(promises);
+		}
+	});
+}

@@ -4,7 +4,7 @@ let restaurants,
     newMap;
 let markers = [];
 const dbVersion = 1;
-const dbName = `restaurants`;
+const dbName = `mws-restaurant-reviews`;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -13,19 +13,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
-  createRestaurantsDB();
+  fetchRestaurants();
   updateRestaurants();
 });
 
 /**
  * Create Restaurants IndexedDB
  */
-createRestaurantsDB = () => {
+fetchRestaurants = () => {
   DBHelper.fetchRestaurants((error, restaurants) => {
     if (error) { // Got an error
       console.error(error);
     } else {
-      DBHelper.createIndexedDB(restaurants, dbName, dbVersion);
+      console.log(restaurants);
     }
   });
 };
@@ -180,7 +180,7 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = "a picture of " + restaurant.cuisine_type + " " + restaurant.name;
+  image.alt = 'a picture of ' + restaurant.cuisine_type + ' ' + restaurant.name;
   li.append(image);
 
   const name = document.createElement('h2');
