@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
 	let manageServiceWorker = new ManageServiceWorker();
 	manageServiceWorker.registerServiceWorker();
 } else {
-    console.log('Service workers are not supported.');
+	console.log('Service workers are not supported.');
 }
 
 /**
@@ -22,37 +22,37 @@ function ManageServiceWorker() {
 		let manageServiceWorker = this;
 
 		navigator.serviceWorker.register('/sw.js')
-            .then(function(reg) {
-                if (!navigator.serviceWorker.controller) {
-                    return;
-                }
+			.then(function(reg) {
+				if (!navigator.serviceWorker.controller) {
+					return;
+				}
 
-                if (reg.waiting) {
-                    manageServiceWorker.updateReady(reg.waiting);
-                    return;
-                }
+				if (reg.waiting) {
+					manageServiceWorker.updateReady(reg.waiting);
+					return;
+				}
 
-                if (reg.installing) {
-                    manageServiceWorker.trackInstalling(reg.installing);
-                    return;
-                }
+				if (reg.installing) {
+					manageServiceWorker.trackInstalling(reg.installing);
+					return;
+				}
 
-                reg.addEventListener('updatefound', function() {
+				reg.addEventListener('updatefound', function() {
 					// If updatefound is fired, it means that there's
 					// a new service worker being installed.
-                    manageServiceWorker.trackInstalling(reg.installing);
-                });
+					manageServiceWorker.trackInstalling(reg.installing);
+				});
 
 				return reg.sync.register('syncOfflineData');
 		    })
-            .catch(function(err) {
-                console.log('Service worker registration failed:', err);
+			.catch(function(err) {
+				console.log('Service worker registration failed:', err);
 			});
 
 		// Listen for the controlling service worker changing and reload the page
 		navigator.serviceWorker.addEventListener('controllerchange', function() {
 			window.location.reload();
-		})
+		});
 	};
 
 	this.trackInstalling = function(worker) {
@@ -65,7 +65,7 @@ function ManageServiceWorker() {
 	};
 
 	this.updateReady = function(worker) {
-	    let confirmDialog = window.confirm("New Service Worker version available. Would you like to update?");
+	    let confirmDialog = window.confirm('New Service Worker version available. Would you like to update?');
 		if (confirmDialog == true) {
 			worker.postMessage({action: 'skipWaiting'});
 		} else {
