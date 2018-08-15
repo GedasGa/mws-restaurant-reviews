@@ -138,10 +138,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 	let favorite = document.getElementById('toggle-favorite');
 	if(restaurant.is_favorite == 'true'){
 		favorite.checked = true;
+		favorite.setAttribute('aria-label', 'remove from the favorite list');
 	} else {
 		favorite.checked = false;
+		favorite.setAttribute('aria-label', 'add to the favorite list');
 	}
-
 
 	const cuisine = document.getElementById('restaurant-cuisine');
 	cuisine.innerHTML = restaurant.cuisine_type;
