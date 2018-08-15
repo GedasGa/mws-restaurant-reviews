@@ -76,7 +76,7 @@ a {
   color: $orange;
   text-decoration: none;
   &:hover {
-    color: $nav_background;
+    color: $hover_focus_outline;
     text-decoration: none;
 }
   &:focus {
@@ -150,7 +150,7 @@ menu {
   display: block;
 }
 nav {
-  display: block;
+  display: flex;
   height: 80px;
   width: 100%;
   background-color: $nav_background;
@@ -163,8 +163,11 @@ nav {
       font-weight: 200;
       letter-spacing: 8px;
       text-transform: uppercase;
+    }
+    &:focus {
+
+    }
   }
-}
 }
 section {
   display: block;
