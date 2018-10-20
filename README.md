@@ -1,10 +1,17 @@
 # Mobile Web Specialist Certification Course
 ---
-#### _Three Stage Course Material Project - Restaurant Reviews_
+#### _Three Stage Course Material Project - Restaurant Reviews_ (Google's Scholarship)
 
-## Project Overview: Stage 1
+## Project Overview
 
-For the **Restaurant Reviews** projects, you will incrementally convert a static webpage to a mobile-ready web application. In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
+I have been selected to receive a full 6-month Google Developer Scholarship For Udacity's Mobile Web Specialist Nanodegree program.
+This program consisted of a series of **Restaurant Reviews** projects, where I have incrementally converted a static webpage to a mobile-ready web application. 
+
+**Stage One** - Transform static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. Also add a service worker to begin the process of creating a seamless offline experience for your users.
+
+**State Two** - Make app more resilient to limited internet connectivity or bandwidth, and create a total user experience leveraging asynchronous browser features, local storage, and more.
+
+**Stage Three** - Implement login and review submission logic on the client side, add search capability to the database so that users can store and look at reviews, and leverage offline capabilities so that users will be able write a review offline or mark a review or restaurant as a favorite while offline, defer it, and have it sent to the server when it's back online.
 
 ### Specification
 
@@ -24,9 +31,159 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 This repository uses [leafletjs](https://leafletjs.com/) with [Mapbox](https://www.mapbox.com/). You need to replace `<your MAPBOX API KEY HERE>` with a token from [Mapbox](https://www.mapbox.com/). Mapbox is free to use, and does not require any payment information. 
 
-### Note about ES6
+# Local Development API Server
 
-Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
+## Project Overview
+
+1. To run this Local Development API server first fork [mws-restaurant-reviews-server](https://github.com/GedasGa/mws-restaurant-reviews-server) repository.
+ 
+2. Then clone to your machine via terminal using HTTPS:
+`
+git clone https://github.com/[your-user-name]/mws-restaurant-reviews-server.git
+`
+
+3. Or using SSH:
+`
+git clone git@github.com:[your-user-name]/mws-restaurant-reviews-server.git
+`
+
+## Usage
+#### Get Restaurants
+```
+curl "http://localhost:1337/restaurants"
+```
+#### Get Restaurants by id
+````
+curl "http://localhost:1337/restaurants/{3}"
+````
+
+## Architecture
+Local server
+- Node.js
+- Sails.js
+
+## Contributors
+
+- [Brandy Lee Camacho - Technical Project Manager](mailto:brandy.camacho@udacity.com)
+- [David Harris - Web Services Lead](mailto:david.harris@udacity.com)
+- [Omar Albeik - Frontend engineer](mailto:omaralbeik@gmail.com)
+
+## Getting Started
+
+### Development local API Server
+_Location of server = /server_
+Server depends on [node.js LTS Version: v6.11.2 ](https://nodejs.org/en/download/), [npm](https://www.npmjs.com/get-npm), and [sails.js](http://sailsjs.com/)
+Please make sure you have these installed before proceeding forward.
+
+Great, you are ready to proceed forward; awesome!
+
+Let's start with running commands in your terminal, known as command line interface (CLI)
+
+###### Install project dependancies
+```Install project dependancies
+# npm i
+```
+###### Install Sails.js globally
+```Install sails global
+# npm i sails -g
+```
+###### Start the server
+```Start server
+# node server
+```
+### You should now have access to your API server environment
+debug: Environment : development
+debug: Port        : 1337
 
 
+## Endpoints
 
+### GET Endpoints
+
+#### Get all restaurants
+```
+http://localhost:1337/restaurants/
+```
+
+#### Get favorite restaurants
+```
+http://localhost:1337/restaurants/?is_favorite=true
+```
+
+#### Get a restaurant by id
+```
+http://localhost:1337/restaurants/<restaurant_id>
+```
+
+#### Get all reviews for a restaurant
+```
+http://localhost:1337/reviews/?restaurant_id=<restaurant_id>
+```
+
+#### Get all restaurant reviews
+```
+http://localhost:1337/reviews/
+```
+
+#### Get a restaurant review by id
+```
+http://localhost:1337/reviews/<review_id>
+```
+
+#### Get all reviews for a restaurant
+```
+http://localhost:1337/reviews/?restaurant_id=<restaurant_id>
+```
+
+
+### POST Endpoints
+
+#### Create a new restaurant review
+```
+http://localhost:1337/reviews/
+```
+
+###### Parameters
+```
+{
+    "restaurant_id": <restaurant_id>,
+    "name": <reviewer_name>,
+    "rating": <rating>,
+    "comments": <comment_text>
+}
+```
+
+
+### PUT Endpoints
+
+#### Favorite a restaurant
+```
+http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=true
+```
+
+#### Unfavorite a restaurant
+```
+http://localhost:1337/restaurants/<restaurant_id>/?is_favorite=false
+```
+
+#### Update a restaurant review
+```
+http://localhost:1337/reviews/<review_id>
+```
+
+###### Parameters
+```
+{
+    "name": <reviewer_name>,
+    "rating": <rating>,
+    "comments": <comment_text>
+}
+```
+
+
+### DELETE Endpoints
+
+#### Delete a restaurant review
+```
+http://localhost:1337/reviews/<review_id>
+```
